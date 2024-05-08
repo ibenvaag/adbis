@@ -1,0 +1,93 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.container{
+    width: 100%;
+    justify-content: center;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* This will ensure items are spaced on the ends */
+    width: 100%; /* This ensures the navbar stretches across the full width */
+    background-color: whitesmoke;
+    padding: 10px 20px;
+    box-sizing: border-box;
+}
+
+
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+img {
+    height: 8%;
+    width: 8%;
+}
+
+.login-container {
+    margin-top: 40px; /* Adjusts space below the navbar */
+    width: 300px; /* Width of the login container */
+    padding: 20px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    background: white;
+    text-align: center;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.login-container h2,
+.login-container form {
+    margin: 0 0 20px 0;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #888;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background-color: #777;
+}
+
+.alternative {
+    color: #555;
+    margin-top: 20px;
+    font-size: 0.9em;
+}
