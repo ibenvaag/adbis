@@ -15,12 +15,12 @@
         <!-- INNLOGGINGSSKJEMA -->
         <div class="login-container">
             <h2>LOGG INN</h2>
-            <form id="loginForm">
+            <form id="loginForm" action="/login" method="POST">
                 <div class="input-group">
-                    <input type="email" id="email" placeholder="E-MAIL" required>
+                    <input type="email" id="email" name="email" placeholder="E-MAIL" required>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" placeholder="PASSORD" required>
+                    <input type="password" id="password" name="password" placeholder="PASSORD" required>
                 </div>
                 <button type="submit"> LOGG INN </button>
                 <p class="alternative">ELLER OPPRETT BRUKER HER</p>
