@@ -31,7 +31,6 @@ app.post("/login", (req, res) => {
       res.status(500).send("Failed to open database");
       return;
     }
-    console.log("Database connected successfully");
 
     const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
     db.get(sql, [email, password], (err, row) => {
@@ -43,7 +42,7 @@ app.post("/login", (req, res) => {
       }
       if (row) {
         console.log('User found:', row.user_id);
-        res.status(200).send("Login successful");
+        res.json({ message: "Login successful", user_id: row.user_id }); // Return user_id
       } else {
         console.log('Login failed for:', email);
         res.status(401).send("Login failed");
@@ -51,6 +50,7 @@ app.post("/login", (req, res) => {
     });
   });
 });
+
 
 // GET route to fetch all arrangements from database
 app.get("/api/arrangements", (req, res) => {
@@ -97,6 +97,41 @@ app.get("/api/arrangements/:arrangement_id", (req, res) => {
       } else {
         res.status(404).send("Event not found");
       }
+      db.close();
+    });
+  });
+});
+
+
+app.post("/api/tickets", (req, res) => {
+  const { user_id, arrangement_id, date_of_purchase } = req.body;
+
+  // Genererer en tilfeldig sekssifret tall for QR-koden
+  const qrCode = Math.floor(100000 + Math.random() * 900000);
+
+  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+      console.error('Failed to open database:', err.message);
+      res.status(500).send("Failed to open database");
+      return;
+    }
+
+    const sql = `INSERT INTO ticket (user_id, arrangement_id, date_of_purchase, QR) VALUES (?, ?, ?, ?)`;
+    db.run(sql, [user_id, arrangement_id, date_of_purchase, qrCode], function(err) {
+      if (err) {
+        console.error('Error running insert query:', err.message);
+        res.status(400).send("Database insert error");
+        return;
+      }
+      const ticketDetails = {
+        ticket_id: this.lastID,
+        user_id: user_id,
+        arrangement_id: arrangement_id,
+        date_of_purchase: date_of_purchase,
+        QR: qrCode
+      };
+      console.log('New ticket created:', ticketDetails);  // Logger detaljer om den nye billetten i terminalen
+      res.json(ticketDetails);  // Sender tilbake detaljer om den nylig opprettede billetten til klienten
       db.close();
     });
   });

@@ -4,6 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
     handleLoginForm(loginForm);
   }
 
+  // Legger til event listener på knappen kun hvis den er tilstede på siden
+  const registerButton = document.getElementById('registerButton');
+  if (registerButton) {
+    registerButton.addEventListener('click', function() {
+      registerForEvent();
+    });
+  }
+
   // Håndterer kun spesifikke detaljer for CV-Kurs på cv-kurs.html
   if (document.body.id === "cv-kurs-page") {
     fetchArrangementDetails(1); // 1 er hardkodet id for CV-Kurs
@@ -28,11 +36,13 @@ function handleLoginForm(formElement) {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
-    }).then(response => {
-      if (response.ok) {
-        window.location.href = '/html/index.html'; // Endre til riktig side etter innlogging
+    }).then(response => response.json())
+    .then(data => {
+      if (data.user_id) {
+        localStorage.setItem('user_id', data.user_id); // Lagrer user_id i localStorage
+        window.location.href = '/html/index.html'; // Navigerer til index.html
       } else {
-        response.text().then(text => alert(text));
+        alert(data.message);
       }
     }).catch(error => console.error('Error:', error));
   });
@@ -84,3 +94,39 @@ function updateArrangementDetails(arrangement) {
     console.error('Element not found: event-name');
   }
 }
+
+function registerForEvent() {
+  const userId = localStorage.getItem('user_id'); // Anta at user_id er lagret i localStorage
+  if (!userId) {
+    alert("Du må være logget inn for å melde deg på.");
+    return;
+  }
+
+  const ticketData = {
+    user_id: userId,
+    arrangement_id: 1, // Hardkodet for CV-Kurs
+    date_of_purchase: new Date().toISOString().slice(0, 10) // YYYY-MM-DD format
+  };
+
+  fetch('/api/tickets', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(ticketData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to register for the event');
+    } return response.json();
+  })
+  .then(ticket => {
+    console.log('Ticket created:', ticket);
+    alert('Du er nå påmeldt kurset!');
+  })
+  .catch(error => {
+    console.error('Error registering for the event:', error);
+    alert('Failed to register for the event');
+  });
+}
+   
