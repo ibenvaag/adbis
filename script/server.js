@@ -42,7 +42,7 @@ app.post("/login", (req, res) => {
         return;
       }
       if (row) {
-        console.log('User found:', row.name);
+        console.log('User found:', row.user_id);
         res.status(200).send("Login successful");
       } else {
         console.log('Login failed for:', email);
@@ -74,6 +74,34 @@ app.get("/api/arrangements", (req, res) => {
     });
   });
 });
+
+app.get("/api/arrangements/:arrangement_id", (req, res) => {
+  console.log("Requested arrangement_id:", req.params.arrangement_id);
+
+  const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
+    if (err) {
+      console.error('Failed to open database:', err.message);
+      res.status(500).send("Failed to open database");
+      return;
+    }
+
+    const sql = "SELECT * FROM arrangement WHERE arrangement_id = ?";
+    db.get(sql, [req.params.arrangement_id], (err, row) => {
+      if (err) {
+        console.error('Error running query:', err.message);
+        res.status(400).send("Database query error");
+        return;
+      }
+      if (row) {
+        res.json(row);
+      } else {
+        res.status(404).send("Event not found");
+      }
+      db.close();
+    });
+  });
+});
+
 
 
 // Server listening on port 3000
