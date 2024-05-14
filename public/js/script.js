@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     handleLoginForm(loginForm);
   }
 
-  // Legger til event listener på knappen kun hvis den er tilstede på siden
+  
   const registerButton = document.getElementById('registerButton');
   if (registerButton) {
     registerButton.addEventListener('click', function() {
@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Håndterer kun spesifikke detaljer for CV-Kurs på cv-kurs.html
+  
   if (document.body.id === "cv-kurs-page") {
     fetchArrangementDetails(1); // 1 er hardkodet id for CV-Kurs
   }
 
-  // Håndterer visning av arrangementer på en generell side
+  
   var mainContainer = document.querySelector('main');
   if (mainContainer && document.body.id !== "cv-kurs-page") {
     displayAllArrangements(mainContainer);
@@ -39,8 +39,8 @@ function handleLoginForm(formElement) {
     }).then(response => response.json())
     .then(data => {
       if (data.user_id) {
-        localStorage.setItem('user_id', data.user_id); // Lagrer user_id i localStorage
-        window.location.href = '/html/index.html'; // Navigerer til index.html
+        localStorage.setItem('user_id', data.user_id); 
+        window.location.href = '/html/index.html'; 
       } else {
         alert(data.message);
       }
@@ -96,7 +96,7 @@ function updateArrangementDetails(arrangement) {
 }
 
 function registerForEvent() {
-  const userId = localStorage.getItem('user_id'); // Anta at user_id er lagret i localStorage
+  const userId = localStorage.getItem('user_id'); 
   if (!userId) {
     alert("Du må være logget inn for å melde deg på.");
     return;
@@ -104,8 +104,8 @@ function registerForEvent() {
 
   const ticketData = {
     user_id: userId,
-    arrangement_id: 1, // Hardkodet for CV-Kurs
-    date_of_purchase: new Date().toISOString().slice(0, 10) // YYYY-MM-DD format
+    arrangement_id: 1, 
+    date_of_purchase: new Date().toISOString().slice(0, 10) 
   };
 
   fetch('/api/tickets', {
